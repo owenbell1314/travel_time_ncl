@@ -3,29 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Newcastle &amp; Tyne and Wear Travel Time Map</title>
+<title>Tyne and Wear Travel Times</title>
+<meta name="description" content="How far you can get from key points around Newcastle upon Tyne and Tyne and Wear by walking, cycling, driving or public transport.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="app">
-  <header class="controls">
-    <h1>Travel Time Map — Tyne and Wear</h1>
-    <div class="control-row">
-      <label class="control">
-        <span class="control-label">Start point</span>
-        <select id="start-point-select"></select>
-      </label>
-      <label class="control">
-        <span class="control-label">Transport mode</span>
-        <select id="mode-select"></select>
-      </label>
-      <span id="status-message" class="status-message" role="status" aria-live="polite"></span>
-    </div>
+
+<div id="map" role="application" aria-label="Map of travel times across Tyne and Wear"></div>
+
+<aside class="panel" id="panel">
+  <header class="panel__head">
+    <p class="eyebrow">Travel time from</p>
+    <h1 class="title" id="panel-title">Tyne and Wear</h1>
   </header>
-  <main id="map"></main>
-</div>
+
+  <div class="panel__body">
+    <div class="field">
+      <label class="field__label" for="start-point-select">Starting from</label>
+      <div class="select-shell">
+        <select id="start-point-select"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="mode-select">Travelling by</label>
+      <div class="select-shell">
+        <select id="mode-select"></select>
+      </div>
+    </div>
+
+    <div class="legend" id="legend">
+      <p class="legend__label">Journey time</p>
+      <ul class="legend__list" id="legend-list"></ul>
+    </div>
+  </div>
+
+  <footer class="panel__foot">
+    <p class="note" id="coverage-note">Tyne and Wear plus 5 miles, land only.</p>
+    <p class="note" id="departure-note"></p>
+  </footer>
+
+  <div class="status" id="status-message" role="status" aria-live="polite"></div>
+</aside>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>

@@ -24,11 +24,16 @@ on GitHub Pages.
 
 ## Generating the map data
 
-1. Fetch the Tyne and Wear boundary and buffer it by 5 miles (only needs
-   re-running if `docs/config.json`'s `boundary` settings change):
+1. Fetch the Tyne and Wear boundary, buffer it by 5 miles, and clip it to the
+   coastline so the map never colours the sea (only needs re-running if
+   `docs/config.json`'s `boundary` settings change):
    ```
    python scripts/fetch_boundary.py
    ```
+   The coastline comes from OpenStreetMap via Overpass. If Overpass is
+   unreachable the script warns and falls back to the unclipped buffer rather
+   than failing — worth re-running if you see that warning, since the fallback
+   extends out over the North Sea.
 2. Generate all isochrones:
    ```
    python scripts/generate_isochrones.py
@@ -40,10 +45,19 @@ on GitHub Pages.
    script setting, so don't mistake the wait for a hang. The script logs
    progress as it goes (`[12/128] ...`) and prints an ETA.
 
-   The script is safe to re-run: it skips any (start point, mode) pair that
-   already has an output file. Pass `--force` to regenerate everything from
-   scratch, e.g. after changing time bands, colors, or start points in
-   `docs/config.json`.
+   The script is safe to re-run: it writes each (start point, mode) pair to
+   disk as soon as its bands come back and skips pairs that already have an
+   output file, so an interrupted run resumes without re-spending API hits.
+   Pass `--force` to regenerate everything from scratch, e.g. after changing
+   time bands, colors, or start points in `docs/config.json`.
+
+3. **Only if you changed the boundary**, re-clip the existing isochrones to it
+   — no API calls, so this is free and takes seconds:
+   ```
+   python scripts/reclip_isochrones.py
+   ```
+   Use this instead of `generate_isochrones.py --force` whenever the start
+   points, modes, and time bands are unchanged and only the boundary moved.
 
 ## Previewing locally
 
@@ -71,24 +85,32 @@ Everything the map shows is controlled by `docs/config.json`:
   TravelTime API `transportation` type.
 - **`start_points`** — the fixed list of selectable start locations
   (name + lat/lng).
-- **`boundary`** — the OSM relation used for the Tyne and Wear boundary and
-  the buffer distance in miles.
+- **`boundary`** — the OSM relation used for the Tyne and Wear boundary, the
+  buffer distance in miles, and the `departure_time` journeys are timed from
+  (a weekday morning by default, which matters for public transport since it
+  follows real timetables).
 
 After editing `time_bands`, `transport_modes`, or `start_points`, re-run
 `python scripts/generate_isochrones.py --force` to regenerate the data —
-the static GeoJSON files won't update themselves.
+the static GeoJSON files won't update themselves. After editing only
+`boundary`, run `fetch_boundary.py` then `reclip_isochrones.py` instead, which
+needs no API calls.
+
+The start points double as the land reference when clipping the buffer to the
+coastline, so they must all be real on-land locations.
 
 ## Project layout
 
 ```
 scripts/
   traveltime_client.py    # TravelTime API client (auth, batching, throttling, retries)
-  fetch_boundary.py       # one-time: OSM boundary -> 5mi buffer -> docs/data/boundary.geojson
+  fetch_boundary.py       # OSM boundary -> 5mi buffer -> coastline clip -> docs/data/boundary.geojson
   generate_isochrones.py  # main: calls the API, clips to boundary, writes docs/data/isochrones/*.geojson
+  reclip_isochrones.py    # re-clip existing isochrones to a changed boundary, no API calls
 docs/                     # GitHub Pages root — static site, no backend
   config.json              # single source of truth for bands/modes/start points/boundary
   index.html, css/, js/    # the map UI
   data/
-    boundary.geojson       # buffered 5mi Tyne and Wear boundary
+    boundary.geojson       # Tyne and Wear + 5mi, clipped to the coastline
     isochrones/            # one GeoJSON file per (start point, mode) pair
 ```
