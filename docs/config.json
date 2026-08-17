@@ -1,0 +1,31 @@
+{
+  "time_bands": [
+    { "id": "under_10", "label": "< 10 min", "max_seconds": 600, "color": "#4CAF50", "order": 4 },
+    { "id": "under_30", "label": "< 30 min", "max_seconds": 1800, "color": "#B4D343", "order": 3 },
+    { "id": "under_45", "label": "< 45 min", "max_seconds": 2700, "color": "#FFD23F", "order": 2 },
+    { "id": "under_60", "label": "< 1 hour", "max_seconds": 3600, "color": "#FB8B24", "order": 1 },
+    { "id": "over_60", "label": "1 hr+", "max_seconds": null, "color": "#9E2A2B", "order": 0 }
+  ],
+  "transport_modes": [
+    { "id": "walking", "label": "Walking", "api_value": "walking" },
+    { "id": "cycling", "label": "Cycling", "api_value": "cycling" },
+    { "id": "driving", "label": "Driving", "api_value": "driving" },
+    { "id": "public_transport", "label": "Public Transport", "api_value": "public_transport" }
+  ],
+  "start_points": [
+    { "id": "monument", "name": "Monument Metro Station", "lat": 54.9741, "lng": -1.6132 },
+    { "id": "chillingham_rd", "name": "Chillingham Road Metro Station", "lat": 54.9829, "lng": -1.5721 },
+    { "id": "gateshead", "name": "Gateshead Interchange", "lat": 54.9619, "lng": -1.6046 },
+    { "id": "sunderland", "name": "Sunderland Rail Station", "lat": 54.9055, "lng": -1.3824 },
+    { "id": "tynemouth", "name": "Tynemouth Metro Station", "lat": 55.0174, "lng": -1.4282 },
+    { "id": "metrocentre", "name": "Metrocentre", "lat": 54.9589, "lng": -1.6649 },
+    { "id": "st_james_park", "name": "St. James' Park", "lat": 54.9755, "lng": -1.6219 },
+    { "id": "stadium_of_light", "name": "Stadium of Light", "lat": 54.9144, "lng": -1.3883 }
+  ],
+  "boundary": {
+    "source": "nominatim",
+    "osm_relation_id": 154376,
+    "buffer_miles": 5,
+    "departure_time": "2026-08-24T08:00:00Z"
+  }
+}
